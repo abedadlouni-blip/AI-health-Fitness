@@ -1,0 +1,21 @@
+{
+  "name": "ai-health-fitness",
+  "version": "1.0.0",
+  "description": "AI Health & Fitness App with personalized BMR/TDEE calculations, dynamic AI workout and nutrition planning, progress tracking, and interactive AI health coach assistant.",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "fitness",
+    "health",
+    "ai",
+    "bmr",
+    "tdee",
+    "workout-planner",
+    "meal-planner"
+  ],
+  "author": "",
+  "license": "MIT"
+}
