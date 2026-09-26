@@ -1,0 +1,48 @@
+name: Migrate AI Health foundation
+
+on:
+  push:
+    branches:
+      - feature/pulse-foundation
+    paths:
+      - .github/workflows/migrate-foundation.yml
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/pulse-foundation
+          fetch-depth: 0
+
+      - name: Clone source application
+        run: git clone --depth 1 https://github.com/abedadlouni-blip/ai-health.git /tmp/ai-health-source
+
+      - name: Copy source into target
+        run: |
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/workflows/migrate-foundation.yml' \
+            /tmp/ai-health-source/ ./
+          mkdir -p .github/workflows
+          cp "$GITHUB_WORKSPACE/.github/workflows/migrate-foundation.yml" /tmp/migrate-foundation.yml 2>/dev/null || true
+          if [ -f /tmp/migrate-foundation.yml ]; then
+            cp /tmp/migrate-foundation.yml .github/workflows/migrate-foundation.yml
+          fi
+
+      - name: Commit migrated foundation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No migration changes to commit."
+            exit 0
+          fi
+          git commit -m "Migrate existing AI Health Assistant foundation"
+          git push origin HEAD:feature/pulse-foundation
